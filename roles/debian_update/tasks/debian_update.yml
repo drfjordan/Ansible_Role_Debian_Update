@@ -13,6 +13,10 @@
     dpkg_options:
       - "{{ debian_update_dpkg_options }}"
 
+- name: Wait for apt lock
+  ansible.builtin.shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 5; done
+  changed_when: false
+
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: dist
