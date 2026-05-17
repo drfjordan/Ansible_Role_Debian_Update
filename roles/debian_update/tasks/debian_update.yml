@@ -1,4 +1,11 @@
 ---
+
+- name: Debian_Update - Output id
+  ansible.builtin.command:
+    command: id -u
+  register: id_output
+  changed_when: false
+
 - name: Update package cache
   ansible.builtin.apt:
     update_cache: true
