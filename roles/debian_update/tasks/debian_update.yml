@@ -1,16 +1,17 @@
 ---
 
 - name: Get current user ID
-  ansible.builtin.shell: id -u
-  register: user_id
+  ansible.builtin.command:
+    cmd: id -u
+  register: debian_update_user_id
   changed_when: false
 
 - name: Update package cache
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
-    dpkg_options:
-      - "{{ debian_update_dpkg_options }}"
+ #   dpkg_options:
+ #     - "{{ debian_update_dpkg_options }}"
 
 - name: Upgrade all packages
   ansible.builtin.apt:
