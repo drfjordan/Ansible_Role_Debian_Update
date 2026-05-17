@@ -1,9 +1,8 @@
 ---
 
-- name: Debian_Update - Output id
-  ansible.builtin.command:
-    command: id -u
-  register: id_output
+- name: Get current user ID
+  ansible.builtin.shell: id -u
+  register: user_id
   changed_when: false
 
 - name: Update package cache
