@@ -6,18 +6,17 @@
   register: debian_update_user_id
   changed_when: false
 
-- name: Update package cache
+# - name: Update package cache
+#  ansible.builtin.apt:
+#    update_cache: true
+#    cache_valid_time: 3600
+#   dpkg_options:
+#     - "{{ debian_update_dpkg_options }}"
+
+- name: Upgrade all packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
- #   dpkg_options:
- #     - "{{ debian_update_dpkg_options }}"
-
-- name: Upgrade all packages
-  become: true
-  become_method: ansible.builtin.sudo
-  ansible.builtin.apt:
-    update_cache: false
     upgrade: dist
 
 - name: Check if a reboot is necessary because the file exists '{{ debian_update_reboot_check_file }}'
