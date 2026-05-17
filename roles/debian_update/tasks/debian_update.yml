@@ -2,8 +2,8 @@
 - name: Update package cache
   ansible.builtin.apt:
     update_cache: true
-    dpkg_options:
-      - "{{ debian_update_dpkg_options }}"
+#    dpkg_options:
+#      - "{{ debian_update_dpkg_options }}"
 
 - name: Upgrade all packages
   ansible.builtin.apt:
