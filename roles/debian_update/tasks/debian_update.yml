@@ -1,13 +1,12 @@
 ---
 - name: Update package cache
-  become: true
   ansible.builtin.apt:
     update_cache: true
-#    dpkg_options:
-#      - "{{ debian_update_dpkg_options }}"
+    cache_valid_time: 3600
+    dpkg_options:
+      - "{{ debian_update_dpkg_options }}"
 
 - name: Upgrade all packages
-  become: true
   ansible.builtin.apt:
     upgrade: safe
 
@@ -49,13 +48,11 @@
   ansible.builtin.meta: flush_handlers
 
 - name: Remove old packages from the cache
-  become: true
   ansible.builtin.apt:
     autoclean: true
     clean: true
 
 - name: Remove dependencies that are no longer required
-  become: true
   ansible.builtin.apt:
     autoremove: true
     purge: true
