@@ -9,36 +9,39 @@
   ansible.builtin.apt:
     upgrade: safe
 
-- name: Check if a reboot is necessary because the file '{{ reboot_chek_file }}' exists
+- name: Check if a reboot is necessary because the file exists '{{ reboot_check_file }}'
   ansible.builtin.stat:
-    path: "{{ reboot_chek_file }}"
+    path: "{{ reboot_check_file }}"
     get_checksum: false
-  register: reboot_required_file
+  register: debian_update_reboot_required_file
 
 - name: Check if a reboot is necessary because of different kernel versions
+  when: ansible_facts["virtualization_type"] != "lxc"
   block:
     - name: Get running kernel version from uname
       ansible.builtin.command: uname -r
-      register: running_kernel
+      register: debian_update_running_kernel
       changed_when: false
 
     - name: Get installed kernel version from /boot
       ansible.builtin.shell: |
+        set -o pipefail
         ls -1 /boot/vmlinuz-* | sed 's/.*vmlinuz-//' | sort -V | tail -1
-      register: installed_kernel
+      args:
+        executable: /bin/bash
+      register: debian_update_installed_kernel
       changed_when: false
 
     - name: Compare versions
       ansible.builtin.set_fact:
-        reboot_required_kernel: "{{ running_kernel.stdout != installed_kernel.stdout }}"
-  when: ansible_facts["virtualization_type"] != "lxc"
+        debian_update_reboot_required_kernel: "{{ debian_update_running_kernel.stdout != debian_update_installed_kernel.stdout }}"
 
 - name: Notify handler if reboot is required
   ansible.builtin.debug:
     msg: "Reboot is required"
   notify: Reboot the server
   changed_when: true
-  when: (reboot_required_file.stat.exists == true) or (reboot_required_kernel | default(false) == true)
+  when: (debian_update_reboot_required_file.stat.exists or (debian_update_reboot_required_kernel | default(false)))
 
 - name: Flush handlers to reboot immediately if needed
   ansible.builtin.meta: flush_handlers
