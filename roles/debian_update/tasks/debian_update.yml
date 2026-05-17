@@ -14,6 +14,8 @@
  #     - "{{ debian_update_dpkg_options }}"
 
 - name: Upgrade all packages
+  become: true
+  become_method: ansible.builtin.sudo
   ansible.builtin.apt:
     update_cache: false
     upgrade: dist
