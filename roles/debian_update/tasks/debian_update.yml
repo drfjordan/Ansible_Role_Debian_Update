@@ -3,15 +3,15 @@
   ansible.builtin.apt:
     update_cache: true
     dpkg_options:
-      - "{{ dpkg_options }}"
+      - "{{ debian_update_dpkg_options }}"
 
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: safe
 
-- name: Check if a reboot is necessary because the file exists '{{ reboot_check_file }}'
+- name: Check if a reboot is necessary because the file exists '{{ debian_update_reboot_check_file }}'
   ansible.builtin.stat:
-    path: "{{ reboot_check_file }}"
+    path: "{{ debian_update_reboot_check_file }}"
     get_checksum: false
   register: debian_update_reboot_required_file
 
