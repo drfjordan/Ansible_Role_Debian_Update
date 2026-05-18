@@ -1,21 +1,10 @@
 ---
 
-- name: Get current user ID
-  ansible.builtin.command:
-    cmd: id -u
-  register: debian_update_user_id
-  changed_when: false
-
 - name: Update package cache
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: 3600
     dpkg_options:
       - "{{ debian_update_dpkg_options }}"
-
-- name: Wait for apt lock
-  ansible.builtin.shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 5; done
-  changed_when: false
 
 - name: Upgrade all packages
   ansible.builtin.apt:
@@ -59,12 +48,15 @@
 - name: Flush handlers to reboot immediately if needed
   ansible.builtin.meta: flush_handlers
 
-- name: Remove old packages from the cache
+- name: Remove useless packages from the cache
   ansible.builtin.apt:
     autoclean: true
-    clean: true
 
-- name: Remove dependencies that are no longer required
+- name: Remove dependencies that are no longer required and purge their configuration files
   ansible.builtin.apt:
     autoremove: true
     purge: true
+
+- name: Run the equivalent of "apt-get clean" to clear the local repository of retrieved package files
+  ansible.builtin.apt:
+    clean: true
