@@ -1,0 +1,6 @@
+---
+# roles/docker_compose_update/tasks/main.yml
+- name: Import Task for docker_compose_update
+  ansible.builtin.import_tasks: docker_compose_update.yml
+  become: true
+  tags: docker_compose_update

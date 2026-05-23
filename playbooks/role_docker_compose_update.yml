@@ -1,0 +1,11 @@
+---
+- name: Docker compose update
+  hosts: all
+  ignore_unreachable: true
+  gather_facts: true
+
+  tasks:
+    - name: Docker compose update role
+      ansible.builtin.import_role:
+        name: docker_compose_update
+      tags: docker_compose_update
