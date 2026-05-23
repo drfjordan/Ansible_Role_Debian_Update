@@ -18,10 +18,10 @@
   community.docker.docker_compose_v2_pull:
     project_src: "{{ docker_compose_update_project_src }}"
 
-- name: Tear down existing services
-  community.docker.docker_compose_v2:
-    project_src: "{{ docker_compose_update_project_src }}"
-    state: absent
+#- name: Tear down existing services
+#  community.docker.docker_compose_v2:
+#    project_src: "{{ docker_compose_update_project_src }}"
+#    state: absent
 
 - name: Create and start services
   community.docker.docker_compose_v2:
