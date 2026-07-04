@@ -29,6 +29,10 @@
     state: present
   register: output
 
+- name: Prune images
+  community.docker.docker_prune:
+    images: true
+
 - name: Show results
   ansible.builtin.debug:
     var: output
